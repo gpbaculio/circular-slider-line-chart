@@ -8,6 +8,7 @@ const theme = createTheme({
     success: "#36775F",
     danger: "#FC163F",
     light: "#F5F5F5",
+    white: "#FFFFFF",
   },
   spacing: {
     XS: 8,

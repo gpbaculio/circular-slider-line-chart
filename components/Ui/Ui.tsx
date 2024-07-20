@@ -7,8 +7,9 @@ import {
 } from "react-native-gesture-handler";
 import { interpolate, useSharedValue } from "react-native-reanimated";
 import CircularProgress from "@/components/CircularSlider/CircularProgress";
-import { DynamicView } from "@/components";
+import { DynamicPressable, DynamicText, DynamicView } from "@/components";
 import Header from "./Header";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Ui = () => {
   const { width } = useWindowDimensions();
@@ -66,6 +67,28 @@ const Ui = () => {
         <GestureDetector gesture={gesture}>
           <CircularProgress progress={end} />
         </GestureDetector>
+        <DynamicView position="absolute" variant="centerItems">
+          <DynamicText>You've contributed</DynamicText>
+          <DynamicText fontWeight="bold" fontSize={18}>
+            $5,700
+          </DynamicText>
+          <DynamicText>Total pot</DynamicText>
+        </DynamicView>
+        <DynamicPressable
+          mt="XS"
+          backgroundColor="dark"
+          variant="rowAlignCenter"
+          py="XS"
+          px="S"
+          borderRadius={24}
+        >
+          <DynamicText color="white">Contribute</DynamicText>
+          <MaterialCommunityIcons
+            name="arrow-top-right"
+            size={24}
+            color="white"
+          />
+        </DynamicPressable>
       </DynamicView>
     </GestureHandlerRootView>
   );
