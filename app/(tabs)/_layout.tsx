@@ -38,9 +38,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="ui"
         options={{
-          headerShown: true,
           title: "LineChart",
-          header: () => <Header />,
           tabBarIcon: () => (
             <FontAwesome name="mobile-phone" size={24} color="purple" />
           ),

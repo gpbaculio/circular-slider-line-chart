@@ -12,19 +12,8 @@ import CircularProgress from "./CircularProgress";
 interface Props {
   btnRadius?: number;
   dialRadius?: number;
-  dialWidth?: number;
-  meterColor?: string;
-  textColor?: string;
-  fillColor?: string;
-  strokeColor?: string;
-  strokeWidth?: number;
-  textSize?: number;
-  value?: number;
-  min?: number;
-  max?: number;
   xCenter?: number;
   yCenter?: number;
-  onValueChange?: (x: number) => number;
 }
 const Slider: React.FC<Props> = ({
   btnRadius = 15,
