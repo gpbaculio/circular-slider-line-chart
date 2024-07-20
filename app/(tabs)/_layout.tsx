@@ -1,10 +1,11 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { DynamicText, DynamicView } from "@/components";
+import Header from "@/components/Ui/Header";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -31,6 +32,17 @@ export default function TabLayout() {
           title: "LineChart",
           tabBarIcon: () => (
             <FontAwesome name="area-chart" size={24} color="purple" />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ui"
+        options={{
+          headerShown: true,
+          title: "LineChart",
+          header: () => <Header />,
+          tabBarIcon: () => (
+            <FontAwesome name="mobile-phone" size={24} color="purple" />
           ),
         }}
       />
