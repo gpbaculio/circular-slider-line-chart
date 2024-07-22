@@ -26,7 +26,7 @@ export const LineChart = () => {
   const value = useDerivedValue(() => {
     return "$" + state.y.highTmp.value.value.toFixed(2);
   }, [state]);
-  console.log("isActive ", isActive);
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>
