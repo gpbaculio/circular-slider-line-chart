@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dimensions } from "react-native";
 
-import { interpolate, useSharedValue } from "react-native-reanimated";
+import { interpolate, runOnJS, useSharedValue } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -16,6 +16,8 @@ const Contribution = () => {
 
   const size = width * 0.65;
   const strokeWidth = 30;
+  const mockMaxValue = 6000;
+  const [value, setValue] = useState(0);
   const r = (size + strokeWidth / 2) / 2;
   const cartesianToPolar = (x: number, y: number) => {
     "worklet";
@@ -43,7 +45,8 @@ const Contribution = () => {
       e.absoluteX - xOrigin,
       e.absoluteY - yOrigin
     );
-    console.log("newAngle ", newAngle);
+    const newValue = interpolate(newAngle, [0, 360], [0, mockMaxValue]);
+    runOnJS(setValue)(newValue);
     end.value = interpolate(newAngle, [0, 360], [0, 1]);
   });
 
@@ -69,7 +72,7 @@ const Contribution = () => {
       <DynamicView position="absolute" variant="centerItems">
         <DynamicText color="gray">You've contributed</DynamicText>
         <DynamicText color="dark" fontWeight="bold" fontSize={18}>
-          $5,700
+          ${Math.round(value)}
         </DynamicText>
         <DynamicText color="gray">Total pot</DynamicText>
       </DynamicView>
