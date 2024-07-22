@@ -1,94 +1,75 @@
-import React from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import React, { useId, useState } from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+
 import {
-  GestureHandlerRootView,
-  GestureDetector,
   Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { interpolate, useSharedValue } from "react-native-reanimated";
-import CircularProgress from "@/components/CircularSlider/CircularProgress";
-import { DynamicPressable, DynamicText, DynamicView } from "@/components";
+
 import Header from "./Header";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import Contribution from "./Contribution";
+import Animated, {
+  interpolate,
+  interpolateColor,
+  runOnJS,
+  SharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import { DynamicAnimatedView, DynamicView } from "..";
+import Indicator from "./Indicator";
 
+const getActiveIndex = (translateX: SharedValue<number>) => {
+  "worklet";
+
+  const activeIndex = Math.round(translateX.value / width);
+  console.log("activeIndex getActiveIndex", activeIndex);
+  return activeIndex;
+};
+const { width } = Dimensions.get("window");
+const snapToOffsets = [0, width];
+const items = new Array(3).fill(null);
 const Ui = () => {
-  const { width } = useWindowDimensions();
-  const xCenter = useSharedValue(0);
-  const yCenter = useSharedValue(0);
+  const translateX = useSharedValue(0);
+  const [activeIndex, setactiveIndex] = useState(0);
 
-  const size = width * 0.65;
-  const strokeWidth = 30;
-  const r = (size - strokeWidth) / 2;
-
-  const cartesianToPolar = (x: number, y: number) => {
-    "worklet";
-    let hC = r;
-
-    if (x === 0) {
-      return y > hC ? 0 : 180;
-    } else if (y === 0) {
-      return x > hC ? 90 : 270;
-    } else {
-      return (
-        Math.round((Math.atan((y - hC) / (x - hC)) * 180) / Math.PI) +
-        (x > hC ? 90 : 270)
-      );
-    }
-  };
-
-  const end = useSharedValue(0.001);
-
-  const gesture = Gesture.Pan().onChange((e) => {
-    const xOrigin = xCenter.value - r;
-    const yOrigin = yCenter.value - r;
-    const newAngle = cartesianToPolar(
-      e.absoluteX - xOrigin,
-      e.absoluteY - yOrigin
-    );
-    end.value = interpolate(newAngle, [0, 360], [0, 1]);
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: ({ contentOffset: { x } }) => {
+      translateX.value = x;
+      const i = Math.round(x / width);
+      runOnJS(setactiveIndex)(i);
+    },
   });
+  const id = useId();
 
   return (
     <GestureHandlerRootView style={styles.container}>
       <Header />
-      <DynamicView
-        width={width}
-        height={300}
-        alignItems="center"
-        justifyContent="center"
-        onLayout={(e) => {
-          "worklet";
-          const { x, y, width, height } = e.nativeEvent.layout;
-
-          xCenter.value = x + width / 2;
-          yCenter.value = y + height / 2;
-        }}
+      <Animated.ScrollView
+        onScroll={onScroll}
+        horizontal
+        decelerationRate="fast"
+        snapToOffsets={snapToOffsets}
+        showsHorizontalScrollIndicator={false}
       >
-        <GestureDetector gesture={gesture}>
-          <CircularProgress progress={end} />
-        </GestureDetector>
-        <DynamicView position="absolute" variant="centerItems">
-          <DynamicText>You've contributed</DynamicText>
-          <DynamicText fontWeight="bold" fontSize={18}>
-            $5,700
-          </DynamicText>
-          <DynamicText>Total pot</DynamicText>
-        </DynamicView>
-        <DynamicPressable
-          mt="XS"
-          backgroundColor="dark"
-          variant="rowAlignCenter"
-          py="XS"
-          px="S"
-          borderRadius={24}
-        >
-          <DynamicText color="white">Contribute</DynamicText>
-          <MaterialCommunityIcons
-            name="arrow-top-right"
-            size={24}
-            color="white"
+        {items.map((_, i) => (
+          <Contribution
+            activeIndex={activeIndex}
+            index={i}
+            key={`${id}_${i}_contribution`}
           />
-        </DynamicPressable>
+        ))}
+      </Animated.ScrollView>
+      <DynamicView flexDirection="row" my="S">
+        {items.map((_, i) => (
+          <Indicator
+            key={`${id}_${i}_indicator`}
+            index={i}
+            translateX={translateX}
+          />
+        ))}
       </DynamicView>
     </GestureHandlerRootView>
   );

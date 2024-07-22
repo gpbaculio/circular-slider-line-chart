@@ -16,7 +16,7 @@ const Header = () => {
       variant="rowAlignCenter"
       justifyContent="space-between"
       borderBottomWidth={0.5}
-      borderBottomColor="dark"
+      borderBottomColor="gray"
     >
       <DynamicView flex={0.2} variant="rowAlignCenter">
         <FontAwesome name="arrow-left" />
@@ -25,7 +25,9 @@ const Header = () => {
         </DynamicText>
       </DynamicView>
       <DynamicView flex={0.6}>
-        <DynamicText textAlign="center">Workplace pension</DynamicText>
+        <DynamicText textAlign="center" color="gray">
+          Workplace pension
+        </DynamicText>
         <DynamicText textAlign="center" fontWeight="bold">
           $10,245
         </DynamicText>

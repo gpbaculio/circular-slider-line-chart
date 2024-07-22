@@ -9,6 +9,7 @@ const theme = createTheme({
     danger: "#FC163F",
     light: "#F5F5F5",
     white: "#FFFFFF",
+    gray: "#9E9E9E",
   },
   spacing: {
     XS: 8,
