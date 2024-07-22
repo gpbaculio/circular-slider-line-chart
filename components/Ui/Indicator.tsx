@@ -1,10 +1,11 @@
 import { useWindowDimensions, StyleSheet } from "react-native";
 import React from "react";
-import Animated, {
+import {
   SharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
+import { DynamicAnimatedView } from "@/components";
 
 type Props = {
   index: number;
@@ -27,8 +28,11 @@ const Indicator = ({ index, translateX }: Props) => {
   });
 
   return (
-    <Animated.View
-      style={[style, index === 1 && styles.centerItem, styles.item]}
+    <DynamicAnimatedView
+      style={style}
+      borderRadius={8}
+      height={8}
+      marginHorizontal={index === 1 ? "XS" : undefined}
     />
   );
 };
@@ -37,8 +41,4 @@ export default Indicator;
 
 const styles = StyleSheet.create({
   centerItem: { marginHorizontal: 8 },
-  item: {
-    borderRadius: 8,
-    height: 8,
-  },
 });

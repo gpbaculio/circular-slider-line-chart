@@ -10,36 +10,21 @@ import {
 import Header from "./Header";
 import Contribution from "./Contribution";
 import Animated, {
-  interpolate,
-  interpolateColor,
-  runOnJS,
-  SharedValue,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { DynamicAnimatedView, DynamicView } from "..";
+import { DynamicView } from "..";
 import Indicator from "./Indicator";
 
-const getActiveIndex = (translateX: SharedValue<number>) => {
-  "worklet";
-
-  const activeIndex = Math.round(translateX.value / width);
-  console.log("activeIndex getActiveIndex", activeIndex);
-  return activeIndex;
-};
 const { width } = Dimensions.get("window");
 const snapToOffsets = [0, width];
 const items = new Array(3).fill(null);
 const Ui = () => {
   const translateX = useSharedValue(0);
-  const [activeIndex, setactiveIndex] = useState(0);
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: ({ contentOffset: { x } }) => {
       translateX.value = x;
-      const i = Math.round(x / width);
-      runOnJS(setactiveIndex)(i);
     },
   });
   const id = useId();
@@ -55,11 +40,7 @@ const Ui = () => {
         showsHorizontalScrollIndicator={false}
       >
         {items.map((_, i) => (
-          <Contribution
-            activeIndex={activeIndex}
-            index={i}
-            key={`${id}_${i}_contribution`}
-          />
+          <Contribution key={`${id}_${i}_contribution`} />
         ))}
       </Animated.ScrollView>
       <DynamicView flexDirection="row" my="S">

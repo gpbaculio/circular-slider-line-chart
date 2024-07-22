@@ -1,12 +1,7 @@
-import React, { useState } from "react";
-import { Dimensions, useWindowDimensions } from "react-native";
+import React from "react";
+import { Dimensions } from "react-native";
 
-import Animated, {
-  interpolate,
-  runOnJS,
-  SharedValue,
-  useSharedValue,
-} from "react-native-reanimated";
+import { interpolate, useSharedValue } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -21,22 +16,22 @@ const Contribution = () => {
 
   const size = width * 0.65;
   const strokeWidth = 30;
-  const r = (size - strokeWidth) / 2;
-
+  const r = (size + strokeWidth / 2) / 2;
   const cartesianToPolar = (x: number, y: number) => {
     "worklet";
     let hC = r;
 
-    if (x === 0) {
-      return y > hC ? 0 : 180;
-    } else if (y === 0) {
-      return x > hC ? 90 : 270;
-    } else {
-      return (
-        Math.round((Math.atan((y - hC) / (x - hC)) * 180) / Math.PI) +
-        (x > hC ? 90 : 270)
-      );
-    }
+    // Calculate the differences
+    const dx = x - hC;
+    const dy = y - hC;
+
+    // Calculate the angle using atan2 to handle all quadrants smoothly
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+    // Convert angle from [-180, 180] range to [0, 360] range
+    const normalizedAngle = (angle + 360) % 360;
+
+    return Math.round(normalizedAngle);
   };
 
   const end = useSharedValue(0.001);
@@ -48,6 +43,7 @@ const Contribution = () => {
       e.absoluteX - xOrigin,
       e.absoluteY - yOrigin
     );
+    console.log("newAngle ", newAngle);
     end.value = interpolate(newAngle, [0, 360], [0, 1]);
   });
 
